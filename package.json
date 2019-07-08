@@ -7,6 +7,10 @@
   "author": "Tim Doherty <tim.doherty@procore.com>",
   "license": "MIT",
   "scripts": {
-    "test": "node index.js"
+    "test": "node index.js",
+    "test:watch": "nodemon index.js"
+  },
+  "dependencies": {
+    "nodemon": "^1.19.1"
   }
 }
