@@ -13,9 +13,12 @@ class TestCase {
     this.setUp();
     const method = this[this.name];
     method.call(this);
+    this.tearDown();
   }
 
   setUp() {}
+
+  tearDown() {}
 }
 
 class WasRun extends TestCase {
@@ -26,28 +29,26 @@ class WasRun extends TestCase {
 
   testMethod() {
     this.wasRun = true;
+    this.log = `${this.log} testMethod`;
   }
 
   setUp() {
     this.wasRun = false;
     this.wasSetUp = true;
+    this.log = "setUp";
+  }
+
+  tearDown() {
+    this.log = `${this.log} tearDown`;
   }
 }
 
 class TestCaseTest extends TestCase {
-  testSetUp() {
-    const test = new WasRun("testMethod");
-    test.run();
-    assert(test.wasSetUp);
-  }
-
-  testRunning() {
-    const test = new WasRun("testMethod");
-    assert(!test.wasRun);
-    test.run();
-    assert(test.wasRun);
+  testTemplateMethod() {
+    this.test = new WasRun("testMethod");
+    this.test.run();
+    assert("setUp testMethod tearDown" === this.test.log);
   }
 }
 
-new TestCaseTest("testRunning").run();
-new TestCaseTest("testSetUp").run();
+new TestCaseTest("testTemplateMethod").run();
