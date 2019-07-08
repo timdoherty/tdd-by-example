@@ -10,23 +10,37 @@ class TestCase {
   }
 
   run() {
+    this.setUp();
     const method = this[this.name];
     method.call(this);
   }
+
+  setUp() {}
 }
 
 class WasRun extends TestCase {
   constructor(name) {
     super(name);
-    this.wasRun = false;
+    this.wasSetUp = false;
   }
 
   testMethod() {
     this.wasRun = true;
   }
+
+  setUp() {
+    this.wasRun = false;
+    this.wasSetUp = true;
+  }
 }
 
 class TestCaseTest extends TestCase {
+  testSetUp() {
+    const test = new WasRun("testMethod");
+    test.run();
+    assert(test.wasSetUp);
+  }
+
   testRunning() {
     const test = new WasRun("testMethod");
     assert(!test.wasRun);
@@ -36,3 +50,4 @@ class TestCaseTest extends TestCase {
 }
 
 new TestCaseTest("testRunning").run();
+new TestCaseTest("testSetUp").run();
