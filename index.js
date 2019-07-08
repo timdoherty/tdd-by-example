@@ -1,20 +1,38 @@
-class WasRun {
+function assert(value) {
+  if (Boolean(value) === false) {
+    throw new Error("Failed to assert value");
+  }
+}
+
+class TestCase {
   constructor(name) {
-    this.wasRun = "None";
     this.name = name;
+  }
+
+  run() {
+    const method = this[this.name];
+    method.call(this);
+  }
+}
+
+class WasRun extends TestCase {
+  constructor(name) {
+    super(name);
+    this.wasRun = false;
   }
 
   testMethod() {
     this.wasRun = true;
   }
+}
 
-  run() {
-    const method = this[this.name];
-    method();
+class TestCaseTest extends TestCase {
+  testRunning() {
+    const test = new WasRun("testMethod");
+    assert(!test.wasRun);
+    test.run();
+    assert(test.wasRun);
   }
 }
 
-const test = new WasRun("testMethod");
-console.log(test.wasRun);
-test.testMethod();
-console.log(test.wasRun);
+new TestCaseTest("testRunning").run();
